@@ -39,6 +39,7 @@ export interface Status {
 export interface FilterStatus {
   name: string
   lifeLevel: number
+  code: string
 }
 
 export interface Metadata {

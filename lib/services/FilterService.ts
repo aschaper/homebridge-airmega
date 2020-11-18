@@ -78,10 +78,10 @@ export class FilterService extends AbstractService {
     }
   }
 
-  async getChangeIndicationForFilter(name: string): Promise<any> {
+  async getChangeIndicationForFilter(code: string): Promise<any> {
     try {
       let status = await this.purifier.waitForFilterStatusUpdate();
-      let statusForFilter = status.find(filter => filter.name == name);
+      let statusForFilter = status.find(filter => filter.code == code);
       let indication;
 
       if (statusForFilter.lifeLevel <= 20) {
@@ -92,19 +92,19 @@ export class FilterService extends AbstractService {
 
       return indication;
     } catch(e) {
-      Logger.error(`Unable to get filter change indication for ${name}`, e);
+      Logger.error(`Unable to get filter change indication for ${code}`, e);
       throw e;
     }
   }
 
-  async getLifeLevelForFilter(name: string): Promise<number> {
+  async getLifeLevelForFilter(code: string): Promise<number> {
     try {
       let status = await this.purifier.waitForFilterStatusUpdate();
-      let statusForFilter = status.find(filter => filter.name == name);
+      let statusForFilter = status.find(filter => filter.code == code);
 
       return statusForFilter.lifeLevel;
     } catch(e) {
-      Logger.error(`Unable to get filter life level for ${name}`, e);
+      Logger.error(`Unable to get filter life level for ${code}`, e);
       throw e;
     }
   }

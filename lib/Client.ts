@@ -41,7 +41,8 @@ export class Client {
     let filterStatuses = response.body.filterList.map(filter => {
       let filterStatus: FilterStatus = {
         name: filter.filterName,
-        lifeLevel: filter.filterPer
+        lifeLevel: filter.filterPer,
+        code: filter.filterCode
       }
 
       return filterStatus;
