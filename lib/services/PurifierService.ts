@@ -30,7 +30,7 @@ export class PurifierService extends AbstractService {
     let purifierService = this.accessory.getService(HAP.Service.AirPurifier);
 
     if (!purifierService) {
-      purifierService = this.accessory.addService(HAP.Service.AirPurifier, this.purifier.name);
+        purifierService = this.accessory.addService(HAP.Service.AirPurifier, this.purifier.name + ' Purifier');
     }
 
     return purifierService;
@@ -56,6 +56,7 @@ export class PurifierService extends AbstractService {
     // the fan speed (setRotationSpeed ensures device is on).
     if (Number(this.purifier.power) == targetState) {
       callback();
+      Logger.diagnostic('PurifierService.setActiveState targetState = this.purifier.power');
       return;
     }
 
@@ -63,9 +64,11 @@ export class PurifierService extends AbstractService {
       await this.client.setPower(this.purifier.id, targetState);
 
       if (targetState) {
+        Logger.diagnostic('PurifierService.setActiveState targetState = Power.On');
         this.purifierService.setCharacteristic(HAP.Characteristic.CurrentAirPurifierState, HAP.Characteristic.CurrentAirPurifierState.PURIFYING_AIR);
         this.purifier.power = Power.On;
       } else {
+        Logger.diagnostic('PurifierService.setActiveState targetState = Power.Off');
         this.purifierService.setCharacteristic(HAP.Characteristic.CurrentAirPurifierState, HAP.Characteristic.CurrentAirPurifierState.INACTIVE);
         this.purifier.power = Power.Off;
       }
@@ -119,14 +122,22 @@ export class PurifierService extends AbstractService {
   }
 
   async setTargetPurifierState(targetState, callback): Promise<void> {
-    try {
+      if (Number(this.purifier.mode) == targetState) {
+          callback();
+          Logger.diagnostic('PurifierService.setTargetPurifierState targetState = this.purifier.mode');
+          return;
+      }
+
+      try {
       await this.client.setMode(this.purifier.id, targetState);
 
       if (targetState) {
+        Logger.diagnostic('PurifierService.setTargetPurifierState targetState = Mode.Auto');
         this.purifier.mode = Mode.Auto;
         this.purifierService.getCharacteristic(HAP.Characteristic.CurrentAirPurifierState)
                             .updateValue(HAP.Characteristic.CurrentAirPurifierState.PURIFYING_AIR);
       } else {
+        Logger.diagnostic('PurifierService.setTargetPurifierState targetState = Mode.Manual');
         this.purifier.mode = Mode.Manual;
         this.purifierService.getCharacteristic(HAP.Characteristic.CurrentAirPurifierState)
                             .updateValue(HAP.Characteristic.CurrentAirPurifierState.IDLE);
@@ -172,18 +183,25 @@ export class PurifierService extends AbstractService {
       }
     }
 
-    if (this.purifier.fan == targetSpeed) {
+    if (this.purifier.fan == targetSpeed && this.purifier.mode == Mode.Manual) {
+      Logger.diagnostic('PurifierService.setRotationSpeed targetState = this.purifier.fan && mode = Manual');
+     
       return callback();
     }
+    else
+        Logger.diagnostic(`PurifierService.setRotationSpeed Current speed = ${this.purifier.fan} & Target speed = ${targetSpeed} & Mode = ${this.purifier.mode}`);
 
     try {
       await this.client.setFanSpeed(this.purifier.id, targetSpeed);
 
       this.purifier.fan = targetSpeed;
 
+      Logger.diagnostic('PurifierService.setRotationSpeed CurrentAirPurifierState = PURIFYING_AIR');
       this.purifierService.getCharacteristic(HAP.Characteristic.CurrentAirPurifierState)
                           .updateValue(HAP.Characteristic.CurrentAirPurifierState.PURIFYING_AIR);
 
+      Logger.diagnostic('PurifierService.setRotationSpeed TargetAirPurifierState = MANUAL');
+      this.purifier.mode = Mode.Manual;
       this.purifierService.getCharacteristic(HAP.Characteristic.TargetAirPurifierState)
                           .updateValue(HAP.Characteristic.TargetAirPurifierState.MANUAL);
 

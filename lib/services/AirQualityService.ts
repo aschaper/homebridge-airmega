@@ -16,7 +16,7 @@ export class AirQualityService extends AbstractService {
     let airQualityService = this.accessory.getService(HAP.Service.AirQualitySensor);
 
     if (!airQualityService) {
-      airQualityService = this.accessory.addService(HAP.Service.AirQualitySensor, this.purifier.name);
+      airQualityService = this.accessory.addService(HAP.Service.AirQualitySensor, this.purifier.name + ' Air Quality');
     }
 
     return airQualityService;

@@ -41,7 +41,8 @@ export class Client {
     let filterStatuses = response.body.filterList.map(filter => {
       let filterStatus: FilterStatus = {
         name: filter.filterName,
-        lifeLevel: filter.filterPer
+        lifeLevel: filter.filterPer,
+        code: filter.filterCode
       }
 
       return filterStatus;
@@ -53,6 +54,7 @@ export class Client {
   async setPower(id: string, on: boolean): Promise<void> {
     let value = on ? '1' : '0';
     let payload = await this.buildControlPayload(id, Config.Codes.POWER, value);
+    Logger.diagnostic(`Client.setPower: ${value}`);
 
     await this.sendControlRequest(id, payload);
   }
@@ -60,6 +62,7 @@ export class Client {
   async setMode(id: string, auto: boolean): Promise<void> {
     let value = auto ? '1' : '2';
     let payload = await this.buildControlPayload(id, Config.Codes.MODE, value);
+    Logger.diagnostic(`Client.setMode: ${value}`);
 
     await this.sendControlRequest(id, payload);
   }
@@ -67,6 +70,7 @@ export class Client {
   async setFanSpeed(id: string, speed: number): Promise<void> {
     let value = speed.toString();
     let payload = await this.buildControlPayload(id, Config.Codes.FAN, value);
+    Logger.diagnostic(`Client.setFanSpeed: ${value}`);
 
     await this.sendControlRequest(id, payload);
   }

@@ -3,4 +3,5 @@ export interface PluginConfig {
   password: string;
   exclude?: string[];
   debug?: boolean;
+  diagnostic?: boolean;
 }

@@ -34,7 +34,7 @@ export namespace Config {
   }
 
   export namespace Filters {
-    export const PRE_FILTER = 'Pre Filter';
-    export const MAIN_FILTER = 'Max2 Filter';
+    export const PRE_FILTER = '3121332';
+    export const MAIN_FILTER = '3111735';
   }
 }

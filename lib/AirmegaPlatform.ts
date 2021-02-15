@@ -15,7 +15,7 @@ export class AirmegaPlatform {
   log: Log;
 
   constructor(log: Log, config: PluginConfig, platform: Platform) {
-    Logger.setLogger(log, config.debug);
+    Logger.setLogger(log, config.debug, config.diagnostic);
 
     this.platform = platform;
     this.accessories = new Map<string, Accessory>();
@@ -55,7 +55,7 @@ export class AirmegaPlatform {
       accessory = new HAP.Accessory(purifier.name, uuid);
       this.accessories.set(accessory.UUID, accessory);
 
-      this.platform.registerPlatformAccessories('homebridge-airmega', 'Airmega', [accessory]);
+        this.platform.registerPlatformAccessories('homebridge-airmega', 'Airmega', [accessory]);
     }
 
     this.registerServices(purifier, accessory, config);

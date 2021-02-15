@@ -18,7 +18,7 @@ export class LightbulbService extends AbstractService {
     let lightbulbService = this.accessory.getService(HAP.Service.Lightbulb);
 
     if (!lightbulbService) {
-      lightbulbService = this.accessory.addService(HAP.Service.Lightbulb, this.purifier.name);
+       lightbulbService = this.accessory.addService(HAP.Service.Lightbulb, this.purifier.name + ' Light');
     }
 
     return lightbulbService;
